@@ -12,10 +12,8 @@
 		$query = dbQuery($sql, ['id' => $id]);
 		return $query->fetchAll();
 	}
-
-	// function getCategoryIdByName(string $header) {
-	// 	$sql = "SELECT id FROM category WHERE header = :header";
-	// 	$query = dbQuery($sql, ['header' => $header]);
-	// 	$id = $query->fetch();
-	// 	return $id === false ? null : $id;
-	// }
+	function addCategory(array $fields) {
+	$sql = "INSERT category (header, description) VALUES (:header, :description)";
+		dbQuery($sql, $fields);
+		return true;
+}

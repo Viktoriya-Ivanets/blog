@@ -24,4 +24,9 @@
         <?php else: ?>
         <?php endif; ?>
     <?php endforeach; ?>
+    <?php if ($mode === 'category' && $user['role'] === 'admin'): ?>
+        <hr>
+        <a href="add_category.php">Add more categories</a>
+    <?php else: ?>
+    <?php endif; ?>
 </div>
