@@ -2,6 +2,7 @@
 <a href="add.php">Add article</a>
 <a href="index.php?mode=category">Categories</a>
 <?php if ($user != null): ?>
+	<a href="notification.php">Notifications</a>
 	<a href="logout.php">Logout</a>
 <?php else: ?>
 	<a href="login.php">Login</a>

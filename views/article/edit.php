@@ -1,6 +1,7 @@
 <a href="index.php">Home</a>
 <a href="add.php">Add article</a>
 <a href="index.php?mode=category">Categories</a>
+<a href="notification.php">Notifications</a>
 <a href="logout.php">Logout</a>
 <hr>
 <div class="form">
@@ -18,6 +19,8 @@
 				<option value="<?php echo $category['id']; ?>"><?php echo $category['header']; ?></option>
 				<?php endforeach; ?>
 			</select><br>
+			Tags:<br>
+			<textarea type="text" name="tags"><?php echo $tag_names_str?></textarea><br>
 			<button>Send</button>
 			<p><?=$err?></p>
 		</form>

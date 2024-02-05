@@ -19,6 +19,7 @@ session_start();
 	$err = '';
 
 	if($_SERVER['REQUEST_METHOD'] === 'POST'){
+		$tagsStr = $_POST['tags'];
 		$rawTags = null;
 		$fields = extractFields($_POST, ['header', 'content']);
 		if (!empty($_POST['tags'])) {
@@ -30,24 +31,18 @@ session_start();
 			$fields['category_id'] = $_POST['category_id'];
 		}
 		if($fields['header'] === '' || $fields['content'] === ''){
-			$err = 'Заполните все поля!';
+			$err = 'Fill all fields!';
 		}
+		elseif(getArticleId($fields['header']) !== false) {
+			$err = 'Article with such name alredy exist!';
+		}
+		else{
 		addArticle($fields);
 		if($rawTags!=null){
 		$articleId = getArticleId($fields['header']);
-		$tags = getAllTags();
 		foreach ($rawTags as $rawTag) {
-			$tagExists = false;
-			foreach ($tags as $tag) {
-				if ($tag['header'] === $rawTag) {
-					$tagExists = true;
-					break;
-				}
-			}
-			if (!$tagExists) {
-				addTag($rawTag);
-			}
-    	}
+		addTag($rawTag);
+		 	}
 		$tagIds = [];
 		foreach ($rawTags as $rawTag) {
 		$tagIds[] = getTagId($rawTag);
@@ -57,6 +52,7 @@ session_start();
 		}
 	}
 		$isSend = true;
+}
 	}
 	else{
 		$fields['header'] = '';

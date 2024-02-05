@@ -2,17 +2,18 @@
     include_once('core/db.php');
 	function authGetUser() : ?array{
 		$user = null;
+		$expire = date("Y-m-d H:i:s");
 
 		$token = $_SESSION['token'] ?? $_COOKIE['token'] ?? null;
 
 		if($token !== null){
 			$session = sessionsOne($token);
 			
-			if($session !== null){
+			if ($session !== null && strtotime($session['dt_expire']) >= strtotime($expire)) {
 				$user = usersById($session['id_user']);
+				deleteExpiredSessions();
 			}
-
-			if($user === null){
+			else{
 				unset($_SESSION['token']);
 				setcookie('token', '', time() - 1, '/php_lessons/php-hw2-sample-src/');
 			}
@@ -20,7 +21,11 @@
 
 		return $user;
 	}
-
+	function deleteExpiredSessions() {
+		$sql = "DELETE FROM sessions WHERE dt_expire < NOW()";
+		$query = dbQuery($sql);
+		return true;
+	}
 	function sessionsAdd(int $idUser, string $token) : bool{
 		$params = ['uid' => $idUser, 'token' => $token];
 		$sql = "INSERT sessions (id_user, token) VALUES (:uid, :token)";

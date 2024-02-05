@@ -40,8 +40,14 @@
     }
     
     function addTag(string $header) {
-        $sql = "INSERT tags (header) VALUES (:header)";
+        $sql = "INSERT INTO tags (header) VALUES (:header) ON DUPLICATE KEY UPDATE header = :header";
         dbQuery($sql, ['header' => $header]);
+        return true;
+    }
+
+    function removeTagsForArticle(int $id) {
+        $sql = "DELETE FROM article_tags WHERE article_id = :id";
+        $query = dbQuery($sql, ['id' => $id]);
         return true;
     }
 
@@ -51,12 +57,13 @@
 		return $query->fetchAll();
     }
     
- function linkArticleWithTag(int $articleId, int $tagId) {
-    $params = ['article_id' => $articleId, 'tag_id' => $tagId];
-    $sql = "INSERT article_tags (article_id, tag_id) VALUES (:article_id, :tag_id)";
-		dbQuery($sql, $params);
-		return true;
-	}
+    function linkArticleWithTag(int $articleId, int $tagId) {
+        $params = ['article_id' => $articleId, 'tag_id' => $tagId];
+        $sql = "INSERT INTO article_tags (article_id, tag_id) VALUES (:article_id, :tag_id) 
+                ON DUPLICATE KEY UPDATE article_id=article_id";
+        dbQuery($sql, $params);
+        return true;
+    }    
 
     function getTagId(string $header) {
         $sql = "SELECT id FROM tags WHERE header =:header";
