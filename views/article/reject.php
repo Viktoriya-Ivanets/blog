@@ -4,6 +4,6 @@
 <a href="notification.php">Notifications</a>
 <a href="logout.php">Logout</a>
 <hr>
-Article rejected. Notification sent to user 
+Article rejected. Notification sent to user
 <hr>
 <a href="index.php">Move to main page</a>

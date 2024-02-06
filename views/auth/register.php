@@ -4,19 +4,19 @@
 <form method="post">
 	<div class="form-group">
 		<label for="auth-login">Enter login</label>
-		<input type="text" class="form-control" id="auth-login" name="login"> 
+		<input type="text" class="form-control" id="auth-login" name="login">
 	</div>
 	<div class="form-group">
 		<label for="auth-password">Enter password</label>
-		<input type="password" class="form-control" id="auth-password" name="password"> 
+		<input type="password" class="form-control" id="auth-password" name="password">
 	</div>
-    <div class="form-group">
+	<div class="form-group">
 		<label for="auth-login">Enter email</label>
-		<input type="text" class="form-control" id="auth-email" name="email"> 
+		<input type="text" class="form-control" id="auth-email" name="email">
 	</div>
-    <div class="form-group">
+	<div class="form-group">
 		<label for="auth-login">Enter your nick</label>
-		<input type="text" class="form-control" id="auth-nick" name="nickname"> 
+		<input type="text" class="form-control" id="auth-nick" name="nickname">
 	</div>
 	<div class="form-check">
 		<input class="form-check-input" type="checkbox" id="login-remember" name="remember">

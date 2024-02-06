@@ -5,7 +5,7 @@
 <a href="logout.php">Logout</a>
 <hr>
 <div class="form">
-	<?php if($isSend):  ?>
+	<?php if ($isSend): ?>
 		<p>Category sucessfully added!</p>
 	<?php else: ?>
 		<form method="post">
@@ -18,4 +18,4 @@
 	<?php endif; ?>
 </div>
 <hr>
-<a href="index.php">Move to main page</a> 
+<a href="index.php">Move to main page</a>

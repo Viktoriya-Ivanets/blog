@@ -4,11 +4,11 @@
 <form method="post">
 	<div class="form-group">
 		<label for="auth-login">Login</label>
-		<input type="text" class="form-control" id="auth-login" name="login"> 
+		<input type="text" class="form-control" id="auth-login" name="login">
 	</div>
 	<div class="form-group">
 		<label for="auth-password">Password</label>
-		<input type="password" class="form-control" id="auth-password" name="password"> 
+		<input type="password" class="form-control" id="auth-password" name="password">
 	</div>
 	<div class="form-check">
 		<input class="form-check-input" type="checkbox" id="login-remember" name="remember">
@@ -18,7 +18,7 @@
 	</div>
 	<hr>
 	<button class="btn btn-primary">Auth now</button>
-	<? if($authErr): ?>
+	<? if ($authErr): ?>
 		<hr>
 		<div class="alert alert-danger">
 			Incorrect auth data

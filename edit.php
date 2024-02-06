@@ -1,4 +1,4 @@
-<?php 
+<?php
 include_once('core/functions.php');
 include_once('models/article.php');
 include_once('models/category.php');
@@ -7,35 +7,34 @@ $id = $_GET['id'];
 $isSend = false;
 $err = '';
 $oldArticle = oneArticle($id);
-$category_list = getCategories ();
+$category_list = getCategories();
 $tags = getTagNamesForArticle($id);
 $tag_names_str = '';
 foreach ($tags as $tag) {
-    $tag_names_str .= '#'. $tag['header'] . ' ';
+	$tag_names_str .= '#' . $tag['header'] . ' ';
 }
 
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$fields = extractFields($_POST, ['header', 'content', 'category_id']);
 	$fields['id'] = $id;
 	$rawTags = null;
 	if (!empty($_POST['tags'])) {
-			preg_match_all('/#(\w+)/', $_POST['tags'], $rawTags);
-			$rawTags = $rawTags[1];
+		preg_match_all('/#(\w+)/', $_POST['tags'], $rawTags);
+		$rawTags = $rawTags[1];
 	}
-		
-	if($fields['header'] === '' || $fields['content'] === '' || $fields['category_id'] === ''){
+
+	if ($fields['header'] === '' || $fields['content'] === '' || $fields['category_id'] === '') {
 		$err = 'Fill all fields!';
-	}
-	else{
+	} else {
 		editArticle($fields);
 		removeTagsForArticle($id);
-		if($rawTags!=null){
+		if ($rawTags != null) {
 			foreach ($rawTags as $rawTag) {
-			addTag($rawTag);
+				addTag($rawTag);
 			}
 			$tagIds = [];
 			foreach ($rawTags as $rawTag) {
-			$tagIds[] = getTagId($rawTag);
+				$tagIds[] = getTagId($rawTag);
 			}
 			foreach ($tagIds as $tagId) {
 				linkArticleWithTag($id, $tagId['id']);
@@ -43,11 +42,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 		}
 		$isSend = true;
 	}
-}
-else{
+} else {
 	$header = $oldArticle['header'];
 	$content = $oldArticle['content'];
 	$category_id = $oldArticle['category_id'];
 }
 include('views/article/edit.php');
-?> 
+?>
