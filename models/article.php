@@ -35,6 +35,8 @@ function removeArticle(int $id)
 	$queryTags = dbQuery($sqlDeleteTags, ['id' => $id]);
 	$sqlDeleteNotifications = "DELETE FROM notification WHERE article_id = :id";
 	$querryNotification = dbQuery($sqlDeleteNotifications, ['id' => $id]);
+	$sqlDeleteComments = "DELETE FROM comments WHERE article_id = :id";
+	$querryComments = dbQuery($sqlDeleteComments, ["id"=> $id]);
 	$sqlDeleteArticle = "DELETE FROM article WHERE id = :id";
 	$queryArticle = dbQuery($sqlDeleteArticle, ['id' => $id]);
 	return $queryArticle->rowCount();

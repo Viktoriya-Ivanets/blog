@@ -36,3 +36,25 @@
 </div>
 <hr>
 <a href="index.php">Move to main page</a>
+<hr>
+<form action="add_comment.php?id=<?= $id ?>" method="post">
+Leave a comment:<br>
+<textarea type="text" name="comment"></textarea><br>
+<button>Send</button>
+</form>
+<hr>
+<h2>Previous comments:</h2>
+<div class="items">
+    <?php if (!empty($items)): ?>
+        <?php foreach ($items as $item): ?>
+            <?php if ($item['state'] === 'active'): ?>
+                <div class="item">
+                    <?php echo $item['content']; ?>
+                    <hr>
+                </div>
+            <?php else: ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    <?php else: ?>
+        No comments yet
+    <?php endif; ?>
