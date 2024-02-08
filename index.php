@@ -11,6 +11,10 @@ $mode = $_GET['mode'];
 $id = $_GET['id'];
 if ($mode === 'category') {
 	$items = getCategories();
+	foreach ($items as $item) {
+		changeState($item['id']);
+	}
+	$items = getCategories();
 } elseif ($mode === 'articles_by_category' && $id != 'NULL') {
 	$items = getArticlesByCategory($id);
 } elseif ($mode === 'articles_by_tags' && $id != 'NULL') {
@@ -18,5 +22,4 @@ if ($mode === 'category') {
 } else {
 	$items = getArticles();
 }
-include('views/index.php')
-	?>
+include('views/index.php');

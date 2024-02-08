@@ -12,4 +12,3 @@ if (!empty($id)) {
     header('Location: notification.php');
 }
 include('views/notification.php');
-?>

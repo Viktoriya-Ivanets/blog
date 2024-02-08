@@ -28,5 +28,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
 	$authErr = true;
 }
-include('views/auth/login.php')
-	?>
+include('views/auth/login.php');

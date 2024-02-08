@@ -1,8 +1,12 @@
 <?php
+session_start();
 include_once('core/functions.php');
 include_once('models/article.php');
 include_once('models/category.php');
 include_once('models/tags.php');
+include_once('models/auth.php');
+
+$user = authGetUser();
 $id = $_GET['id'];
 $isSend = false;
 $err = '';
@@ -41,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			}
 		}
 		$isSend = true;
+		header("Location: article.php?id=" . $id);
 	}
 } else {
 	$header = $oldArticle['header'];
@@ -48,4 +53,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$category_id = $oldArticle['category_id'];
 }
 include('views/article/edit.php');
-?>

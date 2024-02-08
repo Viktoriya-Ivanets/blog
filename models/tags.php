@@ -11,7 +11,7 @@ function getTagsId(int $id)
 
 function getTagName(int $id)
 {
-    $sql = "SELECT header FROM tags WHERE id = :id";
+    $sql = "SELECT * FROM tags WHERE id = :id";
     $query = dbQuery($sql, ['id' => $id]);
     return $query->fetchAll();
 }
@@ -40,7 +40,7 @@ function getArticlesByTag(int $tag_id)
                 WHERE tags.id = :tag_id";
 
     $query = dbQuery($sql, ['tag_id' => $tag_id]);
-    return $query->fetchAll();
+    return $query->rowCount() > 0 ? $query->fetchAll() : null;
 }
 
 function addTag(string $header)
@@ -78,4 +78,20 @@ function getTagId(string $header)
     $sql = "SELECT id FROM tags WHERE header =:header";
     $query = dbQuery($sql, ['header' => $header]);
     return $query->fetch();
+}
+
+function searchTag(string $search)
+{
+    $sql = "SELECT * FROM tags WHERE header LIKE :search";
+    $query = dbQuery($sql, ['search' => "%$search%"]);
+    return $query->fetchAll();
+}
+function changeTagState(int $id)
+{
+    $sql = "UPDATE tags SET state = 'active' WHERE id = :id";
+    if (getArticlesByTag($id) == null) {
+        $sql = "UPDATE tags SET state = 'inactive' WHERE id = :id";
+    }
+    $query = dbQuery($sql, ['id' => $id]);
+    return true;
 }

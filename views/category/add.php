@@ -1,6 +1,7 @@
 <a href="index.php">Home</a>
 <a href="add.php">Add article</a>
 <a href="index.php?mode=category">Categories</a>
+<a href="user_page.php?id=<?= $user['id']; ?>">My page</a>
 <a href="notification.php">Notifications</a>
 <a href="logout.php">Logout</a>
 <hr>

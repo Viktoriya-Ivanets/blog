@@ -1,7 +1,8 @@
 <a href="index.php">Home</a>
-<a href="add.php">Add article</a>
 <a href="index.php?mode=category">Categories</a>
 <?php if ($user != null): ?>
+	<a href="add.php">Add article</a>
+	<a href="user_page.php?id=<?= $user['id']; ?>">My page</a>
 	<a href="notification.php">Notifications</a>
 	<a href="logout.php">Logout</a>
 <?php else: ?>
@@ -28,7 +29,7 @@
 	</div>
 	<div class="tag">
 		<?php foreach ($tags as $tag): ?>
-			<a href="index.php?mode=articles_by_tags&id=<?= $tag['id'] ?>">
+			<a href="index.php?mode=articles_by_tags&id=<?= $tag['id']; ?>">
 				<?php echo '#' . $tag['header']; ?>
 			</a>
 		<?php endforeach; ?>
@@ -38,23 +39,41 @@
 <a href="index.php">Move to main page</a>
 <hr>
 <form action="add_comment.php?id=<?= $id ?>" method="post">
-Leave a comment:<br>
-<textarea type="text" name="comment"></textarea><br>
-<button>Send</button>
+	Leave a comment:<br>
+	<textarea type="text" name="comment"></textarea><br>
+	<button>Send</button>
 </form>
 <hr>
 <h2>Previous comments:</h2>
 <div class="items">
-    <?php if (!empty($items)): ?>
-        <?php foreach ($items as $item): ?>
-            <?php if ($item['state'] === 'active'): ?>
-                <div class="item">
-                    <?php echo $item['content']; ?>
-                    <hr>
-                </div>
-            <?php else: ?>
-            <?php endif; ?>
-        <?php endforeach; ?>
-    <?php else: ?>
-        No comments yet
-    <?php endif; ?>
+	<?php if (!empty($items)): ?>
+		<?php foreach ($items as $item): ?>
+			<?php if ($item['state'] === 'active'): ?>
+				<?php $userInfo = usersById($item['id_user']); ?>
+				<div class="item">
+					<img src="<?= $userInfo['avatar'] ?>" alt="Default Avatar" style="width:50px;height:50px;">
+					<a href="user_page.php?id=<?= $userInfo['id']; ?>">
+						<?= $userInfo['nickname'] ?>
+					</a>
+					<?= $item['content']; ?>
+					<?php if ($user['role'] === 'admin' && $user['id'] !== $item['id_user']): ?>
+						<a href="delete_comment.php?id=<?= $item['comment_id'] ?>">Delete</a>
+					<?php elseif ($user['id'] === $item['id_user']): ?>
+						<a href="delete_comment.php?id=<?= $item['comment_id'] ?>">Delete</a>
+						<a href="article.php?id=<?= $id ?>&mode=edit&comment_id=<?= $item['comment_id'] ?>">Edit</a>
+						<?php if ($_GET['mode'] === 'edit' && isset($_GET['comment_id']) && $_GET['comment_id'] == $item['comment_id']): ?>
+							<form action="edit_comment.php?id=<?= $item['comment_id'] ?>" method="post">
+								Edit comment:<br>
+								<textarea type="text" name="comment_edit"><?= $item['content'] ?></textarea><br>
+								<button>Send</button>
+								<a href="article.php?id=<?= $id ?>">Cancel</a>
+							</form>
+						<?php endif; ?>
+					<?php endif; ?>
+					<hr>
+				</div>
+			<?php endif; ?>
+		<?php endforeach; ?>
+	<?php else: ?>
+		No comments yet
+	<?php endif; ?>

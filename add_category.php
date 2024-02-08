@@ -2,7 +2,10 @@
 session_start();
 
 include_once('core/functions.php');
+include_once('models/auth.php');
 include_once('models/category.php');
+
+$user = authGetUser();
 
 $isSend = false;
 $err = '';

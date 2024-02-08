@@ -1,13 +1,18 @@
 <a href="index.php">Home</a>
-<a href="add.php">Add article</a>
 <a href="index.php?mode=category">Categories</a>
 <?php if ($user != null): ?>
+    <a href="add.php">Add article</a>
+    <a href="user_page.php?id=<?= $user['id']; ?>">My page</a>
     <a href="notification.php">Notifications</a>
     <a href="logout.php">Logout</a>
 <?php else: ?>
     <a href="login.php">Login</a>
     <a href="register.php">Signup</a>
 <?php endif; ?>
+<form method="post" action="search.php">
+    Search:<input type="text" name="search">
+    <button>Send</button>
+</form>
 <hr>
 <div class="items">
     <?php foreach ($items as $item): ?>

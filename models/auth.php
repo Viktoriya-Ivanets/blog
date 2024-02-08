@@ -43,9 +43,9 @@ function sessionsOne(string $token): ?array
 	return $session === false ? null : $session;
 }
 
-function usersById(string $id): ?array
+function usersById(int $id): ?array
 {
-	$sql = "SELECT id,login,email,nickname, role FROM users WHERE id=:id";
+	$sql = "SELECT * FROM users WHERE id=:id";
 	$query = dbQuery($sql, ['id' => $id]);
 	$user = $query->fetch();
 	return $user === false ? null : $user;
@@ -73,5 +73,18 @@ function addUser(array $fields): bool
 {
 	$sql = "INSERT users (login, password, email, nickname) VALUES (:login, :password, :email, :nickname)";
 	dbQuery($sql, $fields);
+	return true;
+}
+function renewAvatar(int $id, string $avatar)
+{
+	$params = ['id' => $id, 'avatar' => $avatar];
+	$sql = "UPDATE users SET avatar = :avatar WHERE id = :id";
+	dbQuery($sql, $params);
+	return true;
+}
+function setDefaultAvatar(int $id)
+{
+	$sql = "UPDATE users SET avatar = 'assets/images/default.jpg' WHERE id = :id";
+	dbQuery($sql, ['id' => $id]);
 	return true;
 }

@@ -9,3 +9,7 @@ function extractFields(array $target, array $fields): array
 
 	return $res;
 }
+function checkImageName(string $name): bool
+{
+	return !!preg_match('/.*\.jpg$/', $name);
+}

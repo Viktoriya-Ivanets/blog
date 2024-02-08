@@ -8,6 +8,13 @@ function getArticles(): array
 	return $query->fetchAll();
 }
 
+function getArticlesByUser(int $id): array
+{
+	$sql = "SELECT id, header, state FROM article where user_id = :id ORDER BY date DESC";
+	$query = dbQuery($sql, ['id' => $id]);
+	return $query->fetchAll();
+}
+
 function addArticle(array $fields): bool
 {
 	$sql = "INSERT article (user_id, header, content, category_id) VALUES (:user_id, :header, :content, :category_id)";
@@ -31,15 +38,9 @@ function getArticleId(string $header)
 
 function removeArticle(int $id)
 {
-	$sqlDeleteTags = "DELETE FROM article_tags WHERE article_id = :id";
-	$queryTags = dbQuery($sqlDeleteTags, ['id' => $id]);
-	$sqlDeleteNotifications = "DELETE FROM notification WHERE article_id = :id";
-	$querryNotification = dbQuery($sqlDeleteNotifications, ['id' => $id]);
-	$sqlDeleteComments = "DELETE FROM comments WHERE article_id = :id";
-	$querryComments = dbQuery($sqlDeleteComments, ["id"=> $id]);
-	$sqlDeleteArticle = "DELETE FROM article WHERE id = :id";
-	$queryArticle = dbQuery($sqlDeleteArticle, ['id' => $id]);
-	return $queryArticle->rowCount();
+	$sql = "DELETE FROM article WHERE id = :id";
+	$query = dbQuery($sql, ['id' => $id]);
+	return $query->rowCount();
 }
 
 function editArticle(array $fields): bool
@@ -54,4 +55,12 @@ function rejectArticle(int $id)
 	$sql = "UPDATE article SET state='rejected' WHERE id=:id";
 	$query = dbQuery($sql, ['id' => $id]);
 	return true;
+}
+
+
+function searchArticle(string $search)
+{
+	$sql = "SELECT * FROM article WHERE header LIKE :search OR content LIKE :search";
+	$query = dbQuery($sql, ['search' => "%$search%"]);
+	return $query->fetchAll();
 }

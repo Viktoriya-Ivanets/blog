@@ -5,4 +5,3 @@ $id = $_GET['id'];
 removeArticle($id);
 echo "<br>";
 include('views/article/delete.php');
-?>
