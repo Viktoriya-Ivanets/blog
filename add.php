@@ -12,7 +12,7 @@ $category_list = getAllCategories();
 $isSend = false;
 $err = '';
 $tag_names_str = '';
-
+$pageTitle = 'Add new article';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$rawTags = null;
 	$fields = extractFields($_POST, ['header', 'content']);
@@ -50,5 +50,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$fields['header'] = '';
 	$fields['content'] = '';
 }
-include('views/article/add.php');
-?>
+$pageContent = template('article/edit', [
+    'isSend' => $isSend, 
+    'header' => $header, 
+    'content'=> $content, 
+    'category_list' => $category_list,
+    'tag_names_str' => $tag_names_str, 
+    'err' => $err]);
+$html = template('main', [
+	'title' => $pageTitle,
+	'content' => $pageContent, 
+    'authInfo' => $authInfo
+]);
+
+echo $html;

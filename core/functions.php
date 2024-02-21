@@ -20,3 +20,11 @@ function checkImageName(string $name): bool
 {
 	return !!preg_match('/.*\.jpg$/', $name);
 }
+
+function template(string $path, array $vars = []) : string{
+    $systemTemplateRendererIntoFullPath = "views/$path.php"; 
+    extract($vars);
+    ob_start();
+    include($systemTemplateRendererIntoFullPath);
+    return ob_get_clean();
+}

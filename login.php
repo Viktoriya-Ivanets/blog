@@ -3,6 +3,7 @@
 include_once('init.php');
 
 $authErr = [];
+$pageTitle = 'Login';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$fields = extractFields($_POST, ['login', 'password', 'remember']);
 	if ($fields['login'] != '' && $fields['password'] != '') {
@@ -26,4 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	}
 }
 $err = implode('<br>', $authErr);
-include('views/auth/login.php');
+$pageContent = template('auth/login', ['err' => $err]);
+$html = template('main', [
+	'title' => $pageTitle,
+	'content' => $pageContent, 
+    'authInfo' => $authInfo
+]);
+
+echo $html;

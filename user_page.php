@@ -17,6 +17,8 @@ if (is_numeric($id)) {
 $articles = getArticlesByUser($id);
 $err = '';
 
+$pageTitle = $user['nickname'] . '`s page';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $file = $_FILES['file'];
     $errors = validateAvatar($file);
@@ -40,4 +42,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 }
-include('views/user_page.php');
+
+$pageContent = template('user_page', ['user' => $user, 'authInfo' => $authInfo, 'articles'=> $articles, 'err' => $err]);
+$html = template('main', [
+	'title' => $pageTitle,
+	'content' => $pageContent, 
+    'authInfo' => $authInfo
+]);
+
+echo $html;

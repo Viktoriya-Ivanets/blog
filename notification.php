@@ -12,6 +12,7 @@ if (!is_null($id) && !is_numeric($id)) {
     include 'views/error/e400.php';
     exit;
 }
+$pageTitle = 'Notifications page';
 $notifications = getNotifications($authInfo['id']);
 if(!is_null($id)) {
 $userFromNotification = getOneNotification($id);
@@ -37,4 +38,11 @@ foreach ($notifications as &$notification) {
     }
 }
 unset($notification);
-include('views/notification.php');
+$pageContent = template('notification', ['notifications' => $notifications]);
+$html = template('main', [
+	'title' => $pageTitle,
+	'content' => $pageContent, 
+    'authInfo' => $authInfo
+]);
+
+echo $html;

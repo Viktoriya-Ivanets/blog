@@ -1,14 +1,3 @@
-<a href="index.php">Home</a>
-<a href="index.php?mode=category">Categories</a>
-<?php if ($authInfo != null): ?>
-	<a href="add.php">Add article</a>
-	<a href="user_page.php?id=<?= $authInfo['id']; ?>">My page</a>
-	<a href="notification.php">Notifications</a>
-	<a href="logout.php">Logout</a>
-<?php else: ?>
-	<a href="login.php">Login</a>
-<?php endif; ?>
-<hr>
 <div class="content">
 	<div class="article">
 		<h1>

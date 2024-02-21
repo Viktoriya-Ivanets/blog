@@ -1,6 +1,3 @@
-<a href="index.php">Home</a>
-<a href="index.php?mode=category">Categories</a>
-<a href="login.php">Login</a>
 <form method="post">
 	<div class="form-group">
 		<label for="auth-login">Enter login</label>

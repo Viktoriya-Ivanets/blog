@@ -20,7 +20,7 @@ if ($authInfo == null || $authInfo['id'] !== $oldArticle['user_id']) {
 	header('Location: index.php');
 	exit();
 }
-
+$pageTitle = $oldArticle['header'] . 'edit page';
 $isSend = false;
 $err = '';
 $category_list = getAllCategories();
@@ -66,4 +66,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $category_id = $oldArticle['category_id'];
 	$prev_category_id = $category_id;
 }
-include('views/article/edit.php');
+
+$pageContent = template('article/edit', [
+    'isSend' => $isSend, 
+    'header' => $header, 
+    'content'=> $content, 
+    'category_list' => $category_list, 
+    'prev_category_id' => $prev_category_id, 
+    'tag_names_str' => $tag_names_str, 
+    'err' => $err]);
+$html = template('main', [
+	'title' => $pageTitle,
+	'content' => $pageContent, 
+    'authInfo' => $authInfo
+]);
+
+echo $html;

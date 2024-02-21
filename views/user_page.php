@@ -1,10 +1,3 @@
-<a href="index.php">Home</a>
-<a href="add.php">Add article</a>
-<a href="index.php?mode=category">Categories</a>
-<a href="user_page.php?id=<?= $authInfo['id']; ?>">My page</a>
-<a href="notification.php">Notifications</a>
-<a href="logout.php">Logout</a>
-<hr>
 <img src="<?= $user['avatar'] ?>" alt="Default Avatar" style="width:150px;height:150px;">
 <?php if ($user['id'] === $authInfo['id']): ?>
     <div class="form">
@@ -33,4 +26,4 @@
         </h1>
         <a href="article.php?id=<?= $article['id']; ?>">Read more</a>
         <hr>
-<?php endforeach; ?>
+<?php endforeach; ?> 

@@ -9,7 +9,7 @@ if ($authInfo == null || $authInfo['role'] !== 'admin') {
 
 $isSend = false;
 $err = '';
-
+$pageTitle = 'Add category';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$fields = extractFields($_POST, ['header', 'description']);
 	$errors = validateCategory($fields);
@@ -25,4 +25,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$fields['header'] = '';
 	$fields['description'] = '';
 }
-include('views/category/add.php');
+$pageContent = template('category/add', [
+    'isSend' => $isSend, 
+    'header' => $header, 
+    'content'=> $description, 
+    'err' => $err]);
+$html = template('main', [
+	'title' => $pageTitle,
+	'content' => $pageContent, 
+    'authInfo' => $authInfo
+]);
+
+echo $html;

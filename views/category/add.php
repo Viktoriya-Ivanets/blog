@@ -1,10 +1,3 @@
-<a href="index.php">Home</a>
-<a href="add.php">Add article</a>
-<a href="index.php?mode=category">Categories</a>
-<a href="user_page.php?id=<?= $authInfo['id']; ?>">My page</a>
-<a href="notification.php">Notifications</a>
-<a href="logout.php">Logout</a>
-<hr>
 <div class="form">
 	<?php if ($isSend): ?>
 		<p>Category sucessfully added!</p>

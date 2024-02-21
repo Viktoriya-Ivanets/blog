@@ -2,6 +2,7 @@
 
 include_once('init.php');
 $err ='';
+$pageTitle = 'Sign-Up';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$fields = extractFields($_POST, ['login', 'password', 'email', 'nickname']);
 	$remember = isset($_POST['remember']);
@@ -28,4 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$pass = $fields['password'];
 }
 }
-include('views/auth/register.php');
+$pageContent = template('auth/register', ['login' => $login, 'pass' => $pass, 'email'=> $email, 'nickname' => $nickname, 'err' => $err]);
+$html = template('main', [
+	'title' => $pageTitle,
+	'content' => $pageContent, 
+    'authInfo' => $authInfo
+]);
+
+echo $html;
