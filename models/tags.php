@@ -2,42 +2,19 @@
 
 include_once('core/db.php');
 
-function getTagsId(int $id)
-{
-    $sql = "SELECT tag_id FROM article_tags WHERE article_id = :id";
-    $query = dbQuery($sql, ['id' => $id]);
-    return $query->fetchAll();
-}
-
-function getTagName(int $id)
-{
-    $sql = "SELECT * FROM tags WHERE id = :id";
-    $query = dbQuery($sql, ['id' => $id]);
-    return $query->fetchAll();
-}
-
 function getTagNamesForArticle(int $article_id)
 {
-    $tag_ids = getTagsId($article_id);
-    $tag_names = [];
-    foreach ($tag_ids as $tag_id) {
-        $tag_name = getTagName($tag_id['tag_id']);
-        $tag_info = [
-            'id' => $tag_id['tag_id'],
-            'header' => $tag_name[0]['header']
-        ];
-        $tag_names[] = $tag_info;
-    }
-
-    return $tag_names;
+    $sql = "SELECT tags.id, tags.header FROM tags JOIN article_tags ON article_tags.tag_id = tags.id WHERE article_tags.article_id = :article_id";
+    $query = dbQuery($sql, ['article_id' => $article_id]);
+    return $query->fetchAll();
 }
 
 function getArticlesByTag(int $tag_id)
 {
-    $sql = "SELECT article.id, article.header, article.state FROM article
+    $sql = "SELECT article.id, article.header FROM article
                 JOIN article_tags ON article.id = article_tags.article_id
                 JOIN tags ON article_tags.tag_id = tags.id
-                WHERE tags.id = :tag_id";
+                WHERE tags.id = :tag_id AND article.state = 'active'";
 
     $query = dbQuery($sql, ['tag_id' => $tag_id]);
     return $query->rowCount() > 0 ? $query->fetchAll() : null;
@@ -55,13 +32,6 @@ function removeTagsForArticle(int $id)
     $sql = "DELETE FROM article_tags WHERE article_id = :id";
     $query = dbQuery($sql, ['id' => $id]);
     return true;
-}
-
-function getAllTags()
-{
-    $sql = "SELECT * FROM tags";
-    $query = dbQuery($sql);
-    return $query->fetchAll();
 }
 
 function linkArticleWithTag(int $articleId, int $tagId)
@@ -82,7 +52,7 @@ function getTagId(string $header)
 
 function searchTag(string $search)
 {
-    $sql = "SELECT * FROM tags WHERE header LIKE :search";
+    $sql = "SELECT id, header FROM tags WHERE header LIKE :search AND state = 'active'";
     $query = dbQuery($sql, ['search' => "%$search%"]);
     return $query->fetchAll();
 }
@@ -94,4 +64,16 @@ function changeTagState(int $id)
     }
     $query = dbQuery($sql, ['id' => $id]);
     return true;
+}
+function addTagsToArticle(array $rawTags, int $id){
+    foreach ($rawTags as $rawTag) {
+        addTag($rawTag);
+    }
+    $tagIds = [];
+    foreach ($rawTags as $rawTag) {
+        $tagIds[] = getTagId($rawTag);
+    }
+    foreach ($tagIds as $tagId) {
+        linkArticleWithTag($id, $tagId['id']);
+    }
 }

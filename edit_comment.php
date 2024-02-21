@@ -1,20 +1,34 @@
 <?php
-session_start();
-include_once('models/comments.php');
-include_once('models/auth.php');
 
-$user = authGetUser();
-$id = $_GET['id'];
+include_once('init.php');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['comment_edit'])) {
-        $content = $_POST['comment_edit'];
-        $articleId = getCommentInfo($id);
-        editComment($id, $content);
-        header("Location: article.php?id=" . $articleId['article_id']);
-        exit();
+$id = isset($_GET['id']) ? $_GET['id'] : null;
+if (is_numeric($id)) {
+    $commentInfo = getCommentInfo($id);
+    if (is_null($commentInfo)) {
+        header('HTTP/1.1 404 Not Found');
+        include 'views/error/e404.php';
+        exit;
     }
 } else {
-    $comment = getCommentInfo($id);
-    $comment_content = $comment['content'];
+    header('HTTP/1.1 400 Bad Request');
+    include 'views/error/e400.php';
+    exit;
+}
+if ($authInfo == null || $authInfo['id'] !== $commentInfo['id_user']) {
+	header("Location: article.php?id=" . $commentInfo['article_id']);
+	exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['comment_edit']) && !empty($_POST['comment_edit'])) {
+        $content = htmlspecialchars($_POST['comment_edit']);
+        editComment($id, $content);
+        header("Location: article.php?id=" . $commentInfo['article_id']);
+        exit();
+    }else {
+        $_SESSION['err_edit'] = "Missing comment";
+        header("Location: article.php?id=" . $commentInfo['article_id']. "&mode=edit&comment_id=". $id);
+        exit();
+    }
 }

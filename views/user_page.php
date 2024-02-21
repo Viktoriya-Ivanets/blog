@@ -28,12 +28,9 @@
     User's articles:
 </h2>
 <?php foreach ($articles as $article): ?>
-    <?php if ($article['state'] === 'rejected'): ?>
-    <?php else: ?>
         <h1>
             <?php echo $article['header'] ?>
         </h1>
         <a href="article.php?id=<?= $article['id']; ?>">Read more</a>
         <hr>
-    <?php endif; ?>
 <?php endforeach; ?>

@@ -1,14 +1,40 @@
 <?php
-session_start();
+include_once('init.php');
 
-include_once('models/article.php');
-include_once('models/auth.php');
-include_once('models/notification.php');
-$id = $_GET['id'];
-$user = authGetUser();
-$notifications = getNotifications($user['id']);
-if (!empty($id)) {
+if ($authInfo == null) {
+	header('Location: index.php');
+	exit();
+}
+
+$id = isset($_GET['id']) ? $_GET['id'] : null;
+if (!is_null($id) && !is_numeric($id)) {
+    header('HTTP/1.1 400 Bad Request');
+    include 'views/error/e400.php';
+    exit;
+}
+$notifications = getNotifications($authInfo['id']);
+if(!is_null($id)) {
+$userFromNotification = getOneNotification($id);
+if ($authInfo['id'] === $userFromNotification['id_user']) {
     setReadState($id);
     header('Location: notification.php');
+} else{
+    header('HTTP/1.1 404 Not Found');
+        include 'views/error/e404.php';
+        exit;
 }
+}
+foreach ($notifications as &$notification) {
+    $article = oneArticle($notification['article_id']);
+    if ($notification['comment_content'] !== null) {
+        $notification['message_detail'] = "Deleted comment - " . $notification['comment_content'];
+    } else {
+        $notification['message_detail'] = "Rejected article - " . $article['header'];
+    }
+    if($_GET['mode'] === 'read_all'){
+    setReadState($notification['id']);
+    header('Location: notification.php');
+    }
+}
+unset($notification);
 include('views/notification.php');

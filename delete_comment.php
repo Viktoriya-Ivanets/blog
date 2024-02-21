@@ -1,24 +1,34 @@
 <?php
-session_start();
 
-include_once('models/article.php');
-include_once('models/notification.php');
-include_once('models/comments.php');
-include_once('models/auth.php');
+include_once('init.php');
 
-$user = authGetUser();
-$id = $_GET['id'];
+$id = isset($_GET['id']) ? $_GET['id'] : null;
+if (is_numeric($id)) {
+    $commentInfo = getCommentInfo($id);
+    if (is_null($commentInfo)) {
+        header('HTTP/1.1 404 Not Found');
+        include 'views/error/e404.php';
+        exit;
+    }
+} else {
+    header('HTTP/1.1 400 Bad Request');
+    include 'views/error/e400.php';
+    exit;
+}
 $message = '';
-$commentInfo = getCommentInfo($id);
+if ($authInfo == null) {
+	header("Location: article.php?id=" . $commentInfo['article_id']);
+	exit();
+}
 
-if ($user['role'] === 'admin' && $user['id'] !== $commentInfo['id_user']) {
+if ($authInfo['role'] === 'admin' && $authInfo['id'] !== $commentInfo['id_user']) {
     $article = oneArticle($commentInfo['article_id']);
     $notification = "Your comment from article \"" . $article['header'] . "\" was deleted because it violates our community rules. Contact our administrator if an error occurs.";
-    $params = ['id_user' => $commentInfo['id_user'], 'article_id' => $commentInfo['article_id'], 'message' => $notification, 'comment_content' => $commentInfo['content']];
-    addNotification($params);
+    addNotification($commentInfo['id_user'], $commentInfo['article_id'], $notification, $commentInfo['content']);
     deleteComment($id);
     $message = "Comment deleted. Notification sent to user";
-} else {
+} 
+if($authInfo['id'] === $commentInfo['id_user']) {
     deleteComment($id);
     $message = "Your comment deleted";
 }

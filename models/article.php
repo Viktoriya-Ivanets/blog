@@ -3,16 +3,16 @@
 include_once('core/db.php');
 function getArticles(): array
 {
-	$sql = "SELECT * FROM article ORDER BY date DESC";
+	$sql = "SELECT id, header FROM article WHERE state = 'active' ORDER BY date DESC";
 	$query = dbQuery($sql);
 	return $query->fetchAll();
-}
+} 
 
-function getArticlesByUser(int $id): array
+function getArticlesByUser(int $id): ?array
 {
-	$sql = "SELECT id, header, state FROM article where user_id = :id ORDER BY date DESC";
+	$sql = "SELECT id, header FROM article where user_id = :id AND state = 'active' ORDER BY date DESC";
 	$query = dbQuery($sql, ['id' => $id]);
-	return $query->fetchAll();
+	return $query->rowCount() > 0 ? $query->fetchAll() : null;
 }
 
 function addArticle(array $fields): bool
@@ -24,9 +24,9 @@ function addArticle(array $fields): bool
 
 function oneArticle(int $id)
 {
-	$sql = "SELECT * FROM article WHERE id =:id";
+	$sql = "SELECT user_id, id, content, header, category_id FROM article WHERE id =:id";
 	$query = dbQuery($sql, ['id' => $id]);
-	return $query->fetch();
+	return $query->fetch() ?: null;
 }
 
 function getArticleId(string $header)
@@ -57,10 +57,35 @@ function rejectArticle(int $id)
 	return true;
 }
 
-
 function searchArticle(string $search)
 {
-	$sql = "SELECT * FROM article WHERE header LIKE :search OR content LIKE :search";
+	$sql = "SELECT id, header FROM article WHERE (header LIKE :search OR content LIKE :search) AND state = 'active'";
 	$query = dbQuery($sql, ['search' => "%$search%"]);
 	return $query->fetchAll();
+}
+
+function validateArticle(array $fields, $tags){
+	$errors = [];
+	if ($fields['header'] === '' || $fields['content'] === '') {
+		$errors[] = 'Fill header and content fields at least';
+	}
+	if(mb_strlen($fields['header'], 'UTF-8') > 256){
+		$errors[] = 'Header no more than 255 chars';
+	}
+	if (isset($fields['id'])) {
+		$currentArticle = oneArticle($fields['id']);
+		if ($currentArticle['header'] !== $fields['header'] && getArticleId($fields['header']) !== false) {
+			$errors[] = 'Article with such name already exists!';
+		}
+	} else {
+		if (getArticleId($fields['header']) !== false) {
+			$errors[] = 'Article with such name already exists!';
+		}
+	}	
+	
+	if($tags !== null && count($tags) > 20){
+		$errors[] = 'No more than 20 tags';
+	}
+
+	return $errors;
 }

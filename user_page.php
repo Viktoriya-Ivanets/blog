@@ -1,23 +1,28 @@
 <?php
-session_start();
-include_once("models/auth.php");
-include_once("models/article.php");
-include_once("core/functions.php");
-$id = $_GET['id'];
-$authInfo = authGetUser();
-$user = usersById($id);
+include_once("init.php");
+
+$id = isset($_GET['id']) ? $_GET['id'] : null;
+if (is_numeric($id)) {
+    $user = usersById($id);
+    if (is_null($user)) {
+        header('HTTP/1.1 404 Not Found');
+        include 'views/error/e404.php';
+        exit;
+    }
+} else {
+    header('HTTP/1.1 400 Bad Request');
+    include 'views/error/e400.php';
+    exit;
+}
 $articles = getArticlesByUser($id);
 $err = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $file = $_FILES['file'];
+    $errors = validateAvatar($file);
 
-    if ($file['name'] === '') {
-        $err = 'Choose file!';
-    } else if ($file['size'] === 0) {
-        $err = 'File too large!';
-    } else if (!checkImageName($file['name'])) {
-        $err = 'Only jpg';
+    if (!empty($errors)) {
+        $err = implode('<br>', $errors);
     } else {
         $imageURL = 'assets/images/' . mt_rand(1000, 100000) . '.jpg';
         copy($file['tmp_name'], $imageURL);

@@ -1,8 +1,8 @@
 <a href="index.php">Home</a>
 <a href="index.php?mode=category">Categories</a>
-<?php if ($user != null): ?>
+<?php if ($authInfo != null): ?>
     <a href="add.php">Add article</a>
-    <a href="user_page.php?id=<?= $user['id']; ?>">My page</a>
+    <a href="user_page.php?id=<?= $authInfo['id']; ?>">My page</a>
     <a href="notification.php">Notifications</a>
     <a href="logout.php">Logout</a>
 <?php else: ?>
@@ -24,7 +24,7 @@
         </a> <br>
     <?php endforeach; ?>
 <?php endif; ?>
-<?php if (count($activeTagResults) > 0): ?>
+<?php if (count($tagsResults) > 0): ?>
     <h2>Tags:</h2>
     <?php foreach ($tagsResults as $tagsResult): ?>
         <a href="index.php?mode=articles_by_tags&id=<?= $tagsResult['id'] ?>">
@@ -32,13 +32,11 @@
         </a><br>
     <?php endforeach; ?>
 <?php endif; ?>
-<?php if (count($activeCategoryResults) > 0): ?>
+<?php if (count($categoryResults) > 0): ?>
     <h2>Categories:</h2>
-    <?php foreach ($activeCategoryResults as $categoryResult): ?>
-        <?php if ($categoryResult['state'] === 'active'): ?>
+    <?php foreach ($categoryResults as $categoryResult): ?>
             <a href="index.php?mode=articles_by_category&id=<?= $categoryResult['id']; ?>">
                 <?php echo $categoryResult['header']; ?>
             </a>
-        <?php endif; ?>
     <?php endforeach; ?>
 <?php endif; ?>

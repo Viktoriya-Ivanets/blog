@@ -1,55 +1,50 @@
 <?php
-session_start();
 
-include_once('core/functions.php');
-include_once('models/article.php');
-include_once('models/auth.php');
-include_once('models/category.php');
-include_once('models/tags.php');
+include_once('init.php');
 
-$user = authGetUser();
-if ($user == null) {
+if ($authInfo == null) {
 	header('Location: index.php');
 	exit();
 }
 
-$category_list = getCategories();
+$category_list = getAllCategories();
 
 $isSend = false;
 $err = '';
+$tag_names_str = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$tagsStr = $_POST['tags'];
 	$rawTags = null;
 	$fields = extractFields($_POST, ['header', 'content']);
 	if (!empty($_POST['tags'])) {
+		$inputedTags = htmlspecialchars($_POST['tags']);
 		preg_match_all('/#(\w+)/', $_POST['tags'], $rawTags);
 		$rawTags = $rawTags[1];
 	}
-	$fields['user_id'] = $user['id'];
+	$fields['user_id'] = $authInfo['id'];
 	if (isset($_POST['category_id'])) {
 		$fields['category_id'] = $_POST['category_id'];
 	}
-	if ($fields['header'] === '' || $fields['content'] === '') {
-		$err = 'Fill all fields!';
-	} elseif (getArticleId($fields['header']) !== false) {
-		$err = 'Article with such name alredy exist!';
-	} else {
+	$errors = validateArticle($fields, $rawTags);
+	if (empty($errors)) {
 		addArticle($fields);
+		$articleId = getArticleId($fields['header']);
 		if ($rawTags != null) {
-			$articleId = getArticleId($fields['header']);
-			foreach ($rawTags as $rawTag) {
-				addTag($rawTag);
-			}
-			$tagIds = [];
-			foreach ($rawTags as $rawTag) {
-				$tagIds[] = getTagId($rawTag);
-			}
-			foreach ($tagIds as $tagId) {
-				linkArticleWithTag($articleId['id'], $tagId['id']);
-			}
+			addTagsToArticle($rawTags, $articleId['id']);
 		}
+		$tags = getTagNamesForArticle($articleId['id']);
+		$category = oneArticle($articleId['id']);
+		changeCategoryState($category['category_id']);
+		foreach ($tags as $tag) {
+			changeTagState($tag['id']);
+			}
 		$isSend = true;
+	}
+	else {
+		$err = implode('<br>', $errors);
+		$header = $fields['header'];
+    	$content = $fields['content'];
+		$tag_names_str = $_POST['tags'];
 	}
 } else {
 	$fields['header'] = '';

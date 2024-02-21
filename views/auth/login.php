@@ -18,10 +18,8 @@
 	</div>
 	<hr>
 	<button class="btn btn-primary">Auth now</button>
-	<? if ($authErr): ?>
 		<hr>
 		<div class="alert alert-danger">
-			Incorrect auth data
+		<?= $err ?>
 		</div>
-	<? endif; ?>
 </form>

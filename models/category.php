@@ -1,18 +1,24 @@
 <?php
 
 include_once('core/db.php');
-function getCategories()
+function getActiveCategories()
 {
-	$sql = "SELECT * FROM category ORDER BY header";
+	$sql = "SELECT id, header FROM category WHERE state = 'active' ORDER BY header";
+	$query = dbQuery($sql);
+	return $query->fetchAll();
+}
+
+function getAllCategories()
+{
+	$sql = "SELECT id, header FROM category ORDER BY header";
 	$query = dbQuery($sql);
 	return $query->fetchAll();
 }
 
 function getArticlesByCategory(int $id)
 {
-	$sql = "SELECT * FROM article WHERE category_id = :id ORDER BY header";
+	$sql = "SELECT id, header FROM article WHERE category_id = :id AND state = 'active' ORDER BY header";
 	$query = dbQuery($sql, ['id' => $id]);
-
 	return $query->rowCount() > 0 ? $query->fetchAll() : null;
 }
 
@@ -24,11 +30,11 @@ function addCategory(array $fields)
 }
 function searchCategory(string $search)
 {
-	$sql = "SELECT * FROM category WHERE header LIKE :search";
+	$sql = "SELECT id, header FROM category WHERE header LIKE :search AND state = 'active'";
 	$query = dbQuery($sql, ['search' => "%$search%"]);
 	return $query->fetchAll();
 }
-function changeState(int $id)
+function changeCategoryState(int $id)
 {
 	$sql = "UPDATE category SET state = 'active' WHERE id = :id";
 	if (getArticlesByCategory($id) == null) {
@@ -37,9 +43,25 @@ function changeState(int $id)
 	$query = dbQuery($sql, ['id' => $id]);
 	return true;
 }
-function oneCategory(int $id)
-{
-	$sql = "SELECT * FROM category WHERE id = :id";
-	$query = dbQuery($sql, ['id' => $id]);
+
+function getCategoryByHeader(string $header) {
+	$sql = "SELECT header FROM category WHERE header = :header";
+	$query = dbQuery($sql, ['header' => $header]);
 	return $query->fetch();
+}
+
+function validateCategory(array $fields){
+	$errors = [];
+	if ($fields['header'] === '' || $fields['description'] === '') {
+		$errors[] = 'Fill all fields';
+	}
+	if (mb_strlen($fields['header']) > 255 || mb_strlen($fields['description']) > 255) {
+    $errors[] = 'No more than 255 chars';
+}
+
+	if (getCategoryByHeader($fields['header']) !== false) {
+		$errors[] = 'Category with such name already exists!';
+	}
+
+	return $errors;
 }

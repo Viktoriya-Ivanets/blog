@@ -28,7 +28,7 @@ function deleteComment(int $id)
 }
 function getCommentInfo(int $id)
 {
-    $sql = "SELECT comment_id, content, article_id, id_user FROM comments WHERE comment_id = :id";
+    $sql = "SELECT content, article_id, id_user FROM comments WHERE comment_id = :id";
     $query = dbQuery($sql, ['id' => $id]);
-    return $query->fetch();
+	return $query->fetch() ?: null;
 }

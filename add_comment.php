@@ -1,19 +1,22 @@
 <?php
-session_start();
-include_once('models/comments.php');
-include_once('models/auth.php');
+include_once('init.php');
 
-$user = authGetUser();
+$id = isset($_GET['id']) ? $_GET['id'] : null;
+
+if ($authInfo == null) {
+	header("Location: article.php?id=" . $id);
+	exit();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['comment'])) {
-        $content = $_POST['comment'];
-        $id = $_GET['id'];
-        addComment($user['id'], $id, $content);
+    if (isset($_POST['comment']) && !empty($_POST['comment'])) {
+        $content = htmlspecialchars($_POST['comment']);
+        addComment($authInfo['id'], $id, $content);
         header("Location: article.php?id=$id");
         exit();
     } else {
-        echo "Error: Missing comment";
+        $_SESSION['err_add'] = "Missing comment";
+        header("Location: article.php?id=$id");
+        exit();
     }
 }
-?>

@@ -1,31 +1,29 @@
 <?php
 
-session_start();
+include_once('init.php');
 
-
-include_once('models/auth.php');
-$authErr = false;
+$authErr = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$login = trim($_POST['login']);
-	$password = trim($_POST['password']);
-	$remember = isset($_POST['remember']);
-
-	if ($login != '' && $password != '') {
-		$user = usersOne($login);
-		if ($user !== null && password_verify($password, $user['password'])) {
+	$fields = extractFields($_POST, ['login', 'password', 'remember']);
+	if ($fields['login'] != '' && $fields['password'] != '') {
+		$user = usersOne($fields['login']);
+		if ($user !== null && password_verify($fields['password'], $user['password'])) {
 			$token = generateToken();
 			sessionsAdd($user['id'], $token);
 			$_SESSION['token'] = $token;
 
-			if ($remember) {
+			if ($fields['remember'] === 'on') {
 				setcookie('token', $token, time() + 3600 * 24 * 30, '/php_lessons/php-hw2-sample-src/');
 			}
 
 			header('Location: index.php');
 			exit();
+		}else{
+			$authErr[] = "Incorrect auth data";
 		}
+	} else{
+		$authErr[] = "Fill all fields";
 	}
-} else {
-	$authErr = true;
 }
+$err = implode('<br>', $authErr);
 include('views/auth/login.php');

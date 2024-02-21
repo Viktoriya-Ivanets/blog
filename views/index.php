@@ -1,8 +1,8 @@
 <a href="index.php">Home</a>
 <a href="index.php?mode=category">Categories</a>
-<?php if ($user != null): ?>
+<?php if ($authInfo != null): ?>
     <a href="add.php">Add article</a>
-    <a href="user_page.php?id=<?= $user['id']; ?>">My page</a>
+    <a href="user_page.php?id=<?= $authInfo['id']; ?>">My page</a>
     <a href="notification.php">Notifications</a>
     <a href="logout.php">Logout</a>
 <?php else: ?>
@@ -16,7 +16,6 @@
 <hr>
 <div class="items">
     <?php foreach ($items as $item): ?>
-        <?php if ($item['state'] === 'active'): ?>
             <div class="item">
                 <h2>
                     <?= $item['header']; ?>
@@ -29,10 +28,8 @@
                     <a href="article.php?id=<?= $item['id']; ?>">Read more</a>
                 <?php endif; ?>
             </div>
-        <?php else: ?>
-        <?php endif; ?>
     <?php endforeach; ?>
-    <?php if ($mode === 'category' && $user['role'] === 'admin'): ?>
+    <?php if ($mode === 'category' && $authInfo['role'] === 'admin'): ?>
         <hr>
         <a href="add_category.php">Add more categories</a>
     <?php else: ?>

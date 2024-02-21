@@ -37,7 +37,7 @@ function sessionsAdd(int $idUser, string $token): bool
 
 function sessionsOne(string $token): ?array
 {
-	$sql = "SELECT * FROM sessions WHERE token=:token";
+	$sql = "SELECT id_user, dt_expire FROM sessions WHERE token=:token";
 	$query = dbQuery($sql, ['token' => $token]);
 	$session = $query->fetch();
 	return $session === false ? null : $session;
@@ -45,7 +45,7 @@ function sessionsOne(string $token): ?array
 
 function usersById(int $id): ?array
 {
-	$sql = "SELECT * FROM users WHERE id=:id";
+	$sql = "SELECT id, role, nickname, avatar FROM users WHERE id=:id";
 	$query = dbQuery($sql, ['id' => $id]);
 	$user = $query->fetch();
 	return $user === false ? null : $user;
@@ -87,4 +87,43 @@ function setDefaultAvatar(int $id)
 	$sql = "UPDATE users SET avatar = 'assets/images/default.jpg' WHERE id = :id";
 	dbQuery($sql, ['id' => $id]);
 	return true;
+}
+
+function validateAvatar(array $file){
+	$errors = [];
+	if ($file['name'] === '') {
+        $errors[] = 'Choose file!';
+    }
+	if ($file['size'] === 0 && $file['name'] !== '') {
+		$errors[] = 'File too large!';
+    }
+	if (!checkImageName($file['name']) && $file['name'] !== '') {
+        $errors[] = 'Only jpg';
+	}
+	return $errors;
+}
+
+function checkNickname(string $nickname){
+	$sql = "SELECT nickname FROM users WHERE nickname=:nickname";
+	$query = dbQuery($sql, ['nickname' => $nickname]);
+	$user = $query->fetch();
+	return $user === false ? null : $user;
+}
+function validateRegistration(array $fields){
+	$errors = [];
+	$checkLogin = usersOne($fields['login']);
+	$checkNick = checkNickname($fields['nickname']);
+	if ($fields['login'] === '' || $fields['password'] === '' || $fields['nickname'] === '') {
+		$errors[] = 'Fill required fields at least';
+	}
+	if($checkNick != null ){
+		$errors[] = 'Such nick already exist';
+	}
+	if($checkLogin != null ){
+		$errors[] = 'Such login already exist';
+	}
+	if(mb_strlen($fields['password']) < 6){
+		$errors[] = 'Password must be at least 6 chars';
+	}
+	return $errors;
 }

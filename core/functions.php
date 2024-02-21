@@ -1,14 +1,21 @@
 <?php
 function extractFields(array $target, array $fields): array
 {
-	$res = [];
+    $res = [];
 
-	foreach ($fields as $field) {
-		$res[$field] = trim($target[$field]);
-	}
+    foreach ($fields as $field) {
+        if (isset($target[$field])) {
+            $res[$field] = trim(htmlspecialchars($target[$field]));
+        } else {
+            $res[$field] = '';
+        }
+    }
 
-	return $res;
+    return $res;
 }
+
+$fields = extractFields($_POST, ['login', 'password', 'remember']);
+
 function checkImageName(string $name): bool
 {
 	return !!preg_match('/.*\.jpg$/', $name);
