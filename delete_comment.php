@@ -17,6 +17,7 @@ if (is_numeric($id)) {
 }
 $message = '';
 if ($authInfo == null) {
+    $_SESSION['system_message'] = 'You are not permitted for such actions';
 	header("Location: article.php?id=" . $commentInfo['article_id']);
 	exit();
 }
@@ -26,12 +27,13 @@ if ($authInfo['role'] === 'admin' && $authInfo['id'] !== $commentInfo['id_user']
     $notification = "Your comment from article \"" . $article['header'] . "\" was deleted because it violates our community rules. Contact our administrator if an error occurs.";
     addNotification($commentInfo['id_user'], $commentInfo['article_id'], $notification, $commentInfo['content']);
     deleteComment($id);
-    $message = "Comment deleted. Notification sent to user";
+    $_SESSION['system_message'] = 'Comment deleted. Notification sent to user';
+        header("Location: article.php?id=" . $commentInfo['article_id']);
+        exit();
 } 
 if($authInfo['id'] === $commentInfo['id_user']) {
     deleteComment($id);
-    $message = "Your comment deleted";
+    $_SESSION['system_message'] = 'Comment deleted successfully';
+        header("Location: article.php?id=" . $commentInfo['article_id']);
+        exit();
 }
-
-include('views/article/reject.php');
-?>

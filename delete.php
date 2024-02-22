@@ -17,6 +17,7 @@ if (is_numeric($id)) {
 }
 $tags = getTagNamesForArticle($id);
 if ($authInfo == null || $authInfo['id'] !== $articleInfo['user_id']) {
+    $_SESSION['system_message'] = 'You are not permitted for such actions';
 	header("Location: article.php?id=" . $articleInfo['id']);
 	exit();
 }
@@ -26,5 +27,6 @@ changeCategoryState($articleInfo['category_id']);
 foreach ($tags as $tag) {
 changeTagState($tag['id']);
 }
-echo "<br>";
-include('views/article/delete.php');
+$_SESSION['system_message'] = 'Article deleted successfully';
+header("Location: index.php");
+exit();

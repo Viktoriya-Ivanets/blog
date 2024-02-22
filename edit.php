@@ -17,11 +17,11 @@ if (is_numeric($id)) {
 }
 
 if ($authInfo == null || $authInfo['id'] !== $oldArticle['user_id']) {
+    $_SESSION['system_message'] = 'You are not permitted for such actions';
 	header('Location: index.php');
 	exit();
 }
 $pageTitle = $oldArticle['header'] . 'edit page';
-$isSend = false;
 $err = '';
 $category_list = getAllCategories();
 $tags = getTagNamesForArticle($id);
@@ -52,8 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($tags as $tag) {
             changeTagState($tag['id']);
         }
-        $isSend = true;
+        $_SESSION['system_message'] = 'Article edited successfully';
         header("Location: article.php?id=" . $id);
+        exit();
     } else {
         $err = implode('<br>', $errors);
 		$header = $fields['header'];
@@ -68,7 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $pageContent = template('article/edit', [
-    'isSend' => $isSend, 
     'header' => $header, 
     'content'=> $content, 
     'category_list' => $category_list, 

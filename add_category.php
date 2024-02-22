@@ -3,11 +3,11 @@
 include_once('init.php');
 
 if ($authInfo == null || $authInfo['role'] !== 'admin') {
+	$_SESSION['system_message'] = 'You are not permitted for such actions';
 	header("Location: index.php?mode=category");
 	exit();
 }
 
-$isSend = false;
 $err = '';
 $pageTitle = 'Add category';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -15,7 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$errors = validateCategory($fields);
 	if (empty($errors)) {
 	addCategory($fields);
-	$isSend = true;
+	$_SESSION['system_message'] = 'Category added successfully. It will be inactive until new article with such category not added';
+	header("Location: index.php?mode=category");
+	exit();
 	}else {
 		$err = implode('<br>', $errors);
 		$header = $fields['header'];
@@ -26,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$fields['description'] = '';
 }
 $pageContent = template('category/add', [
-    'isSend' => $isSend, 
     'header' => $header, 
     'content'=> $description, 
     'err' => $err]);

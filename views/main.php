@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title; ?></title>
+    <script src="assets/js/scripts.js" defer></script>
 </head>
 
 <body>
@@ -29,6 +30,15 @@
             </form>
         </nav>
     </header>
+    <?php if(isset($_SESSION['system_message'])): ?>
+    <script>
+        var SystemMessage = '<?php echo $_SESSION['system_message']; ?>';
+        document.addEventListener("DOMContentLoaded", function() {
+            addSystemMessage(SystemMessage);
+        });
+    </script>
+    <?php unset($_SESSION['system_message']); ?>
+<?php endif; ?>
 
     <main>
     <?= $content; ?>

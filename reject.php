@@ -3,6 +3,7 @@
 include_once('init.php');
 
 if ($authInfo == null || $authInfo['role'] !== 'admin') {
+    $_SESSION['system_message'] = 'You are not permitted for such actions';
 	header('Location: index.php');
 	exit();
 }
@@ -21,7 +22,6 @@ if (is_numeric($id)) {
     exit;
 }
 
-$message = "Article rejected. Notification sent to user";
 $tags = getTagNamesForArticle($id);
 $notification = "Your article was rejected because it violates our community rules. Contact our administrator if an error occurs.";
 rejectArticle($id);
@@ -30,5 +30,6 @@ changeCategoryState($article['category_id']);
 foreach ($tags as $tag) {
     changeTagState($tag['id']);
     }
-echo "<br>";
-include('views/article/reject.php');
+    $_SESSION['system_message'] = 'Article rejected. Notification sent to user';
+    header("Location: index.php");
+    exit();

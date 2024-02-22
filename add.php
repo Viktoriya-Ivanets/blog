@@ -3,13 +3,13 @@
 include_once('init.php');
 
 if ($authInfo == null) {
+	$_SESSION['system_message'] = 'Log-In or Sign-Up to add new article';
 	header('Location: index.php');
 	exit();
 }
 
 $category_list = getAllCategories();
 
-$isSend = false;
 $err = '';
 $tag_names_str = '';
 $pageTitle = 'Add new article';
@@ -38,7 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		foreach ($tags as $tag) {
 			changeTagState($tag['id']);
 			}
-		$isSend = true;
+		$_SESSION['system_message'] = 'Article added successfully';
+header("Location: index.php");
+exit();
 	}
 	else {
 		$err = implode('<br>', $errors);
@@ -50,8 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$fields['header'] = '';
 	$fields['content'] = '';
 }
-$pageContent = template('article/edit', [
-    'isSend' => $isSend, 
+$pageContent = template('article/add', [
     'header' => $header, 
     'content'=> $content, 
     'category_list' => $category_list,

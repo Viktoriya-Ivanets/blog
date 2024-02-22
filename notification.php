@@ -3,6 +3,7 @@ include_once('init.php');
 
 if ($authInfo == null) {
 	header('Location: index.php');
+    $_SESSION['system_message'] = 'Log-In or Sign-Up to see your notifications';
 	exit();
 }
 

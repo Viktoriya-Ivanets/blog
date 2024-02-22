@@ -16,6 +16,7 @@ if (is_numeric($id)) {
     exit;
 }
 if ($authInfo == null || $authInfo['id'] !== $commentInfo['id_user']) {
+    $_SESSION['system_message'] = 'You are not permitted for such actions';
 	header("Location: article.php?id=" . $commentInfo['article_id']);
 	exit();
 }
@@ -24,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['comment_edit']) && !empty($_POST['comment_edit'])) {
         $content = htmlspecialchars($_POST['comment_edit']);
         editComment($id, $content);
+        $_SESSION['system_message'] = 'Comment edited successfully';
         header("Location: article.php?id=" . $commentInfo['article_id']);
         exit();
     }else {
