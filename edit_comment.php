@@ -7,18 +7,18 @@ if (is_numeric($id)) {
     $commentInfo = getCommentInfo($id);
     if (is_null($commentInfo)) {
         header('HTTP/1.1 404 Not Found');
-        include 'views/error/e404.php';
+        make404Error($authInfo);
         exit;
     }
 } else {
     header('HTTP/1.1 400 Bad Request');
-    include 'views/error/e400.php';
+    make400Error($authInfo);
     exit;
 }
 if ($authInfo == null || $authInfo['id'] !== $commentInfo['id_user']) {
     $_SESSION['system_message'] = 'You are not permitted for such actions';
-	header("Location: article.php?id=" . $commentInfo['article_id']);
-	exit();
+    header("Location: article.php?id=" . $commentInfo['article_id']);
+    exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -28,9 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['system_message'] = 'Comment edited successfully';
         header("Location: article.php?id=" . $commentInfo['article_id']);
         exit();
-    }else {
+    } else {
         $_SESSION['err_edit'] = "Missing comment";
-        header("Location: article.php?id=" . $commentInfo['article_id']. "&mode=edit&comment_id=". $id);
+        header("Location: article.php?id=" . $commentInfo['article_id'] . "&mode=edit&comment_id=" . $id);
         exit();
     }
 }

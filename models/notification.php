@@ -23,8 +23,9 @@ function setReadState(int $id)
     return true;
 }
 
-function getOneNotification(int $id){
+function getOneNotification(int $id)
+{
     $sql = "SELECT id_user, article_id FROM notification WHERE id = :id";
     $query = dbQuery($sql, ['id' => $id]);
-	return $query->fetch() ?: null;
+    return $query->fetch() ?: null;
 }

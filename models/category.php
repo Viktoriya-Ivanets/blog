@@ -44,20 +44,22 @@ function changeCategoryState(int $id)
 	return true;
 }
 
-function getCategoryByHeader(string $header) {
+function getCategoryByHeader(string $header)
+{
 	$sql = "SELECT header FROM category WHERE header = :header";
 	$query = dbQuery($sql, ['header' => $header]);
 	return $query->fetch();
 }
 
-function validateCategory(array $fields){
+function validateCategory(array $fields)
+{
 	$errors = [];
 	if ($fields['header'] === '' || $fields['description'] === '') {
 		$errors[] = 'Fill all fields';
 	}
 	if (mb_strlen($fields['header']) > 255 || mb_strlen($fields['description']) > 255) {
-    $errors[] = 'No more than 255 chars';
-}
+		$errors[] = 'No more than 255 chars';
+	}
 
 	if (getCategoryByHeader($fields['header']) !== false) {
 		$errors[] = 'Category with such name already exists!';

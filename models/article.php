@@ -6,7 +6,7 @@ function getArticles(): array
 	$sql = "SELECT id, header FROM article WHERE state = 'active' ORDER BY date DESC";
 	$query = dbQuery($sql);
 	return $query->fetchAll();
-} 
+}
 
 function getArticlesByUser(int $id): ?array
 {
@@ -59,17 +59,18 @@ function rejectArticle(int $id)
 
 function searchArticle(string $search)
 {
-	$sql = "SELECT id, header FROM article WHERE (header LIKE :search OR content LIKE :search) AND state = 'active'";
+	$sql = "SELECT id, header FROM article WHERE (header LIKE :search) AND state = 'active'";
 	$query = dbQuery($sql, ['search' => "%$search%"]);
 	return $query->fetchAll();
 }
 
-function validateArticle(array $fields, $tags){
+function validateArticle(array $fields, $tags, $text)
+{
 	$errors = [];
-	if ($fields['header'] === '' || $fields['content'] === '') {
+	if ($fields['header'] === '' || $text === "") {
 		$errors[] = 'Fill header and content fields at least';
 	}
-	if(mb_strlen($fields['header'], 'UTF-8') > 256){
+	if (mb_strlen($fields['header'], 'UTF-8') > 256) {
 		$errors[] = 'Header no more than 255 chars';
 	}
 	if (isset($fields['id'])) {
@@ -81,9 +82,9 @@ function validateArticle(array $fields, $tags){
 		if (getArticleId($fields['header']) !== false) {
 			$errors[] = 'Article with such name already exists!';
 		}
-	}	
-	
-	if($tags !== null && count($tags) > 20){
+	}
+
+	if ($tags !== null && count($tags) > 20) {
 		$errors[] = 'No more than 20 tags';
 	}
 

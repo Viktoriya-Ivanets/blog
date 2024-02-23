@@ -65,7 +65,8 @@ function changeTagState(int $id)
     $query = dbQuery($sql, ['id' => $id]);
     return true;
 }
-function addTagsToArticle(array $rawTags, int $id){
+function addTagsToArticle(array $rawTags, int $id)
+{
     foreach ($rawTags as $rawTag) {
         addTag($rawTag);
     }

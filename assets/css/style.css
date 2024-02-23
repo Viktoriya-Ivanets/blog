@@ -1,0 +1,147 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.user-page-img {
+    width: 100%;
+    height: auto;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment-avatar {
+    width: 50px;
+    height: 50px;
+}
+
+.comment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+}
+
+footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 1000;
+    width: 100%;
+}
+
+.system_message {
+    position: fixed;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #99ccff;
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+    z-index: 9999;
+    max-width: 80%;
+    text-align: center;
+    box-sizing: border-box;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    opacity: 0.8;
+}
+
+.alert-danger {
+    margin-top: 20px;
+}
+
+.centered-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.small-container {
+    max-width: 600px;
+    width: 100%;
+}
+
+.container-fluid {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.big-centred-block {
+    text-align: center;
+    margin: 250px auto;
+    width: 50%;
+}
+
+main {
+    flex: 1;
+    background-color: #cce6ff;
+}
+
+.container-fluid,
+.my-container,
+p {
+    margin: 0;
+    padding: 0;
+}
+
+.my-container {
+    padding-top: 10px !important;
+}
+
+.navbar-expand-lg {
+    padding-left: 0px;
+    padding-right: 0px;
+    background-color: #99ccff !important;
+}
+
+.navbar-collapse,
+.my-container {
+    padding-left: 250px;
+    padding-right: 250px;
+}
+
+.navbar-toggler {
+    margin-left: 250px;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #99ccff;
+    height: 50px;
+    margin-top: auto;
+}
+
+.my-container a,
+.my-container h2 {
+    margin: 20px 0;
+}
+
+@media (max-width: 1330px) {
+
+    .navbar-collapse,
+    .my-container,
+    .navbar-toggler {
+        padding-left: 20px;
+        padding-right: 20px;
+        margin-left: 20px;
+    }
+}

@@ -19,10 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 			header('Location: index.php');
 			exit();
-		}else{
+		} else {
 			$authErr[] = "Incorrect auth data";
 		}
-	} else{
+	} else {
 		$authErr[] = "Fill all fields";
 	}
 }
@@ -30,8 +30,8 @@ $err = implode('<br>', $authErr);
 $pageContent = template('auth/login', ['err' => $err]);
 $html = template('main', [
 	'title' => $pageTitle,
-	'content' => $pageContent, 
-    'authInfo' => $authInfo
+	'content' => $pageContent,
+	'authInfo' => $authInfo
 ]);
 
 echo $html;

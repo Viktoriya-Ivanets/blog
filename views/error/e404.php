@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 Not Found</title>
-</head>
-<body>
+<div class="big-centred-block">
     <h1>404 Not Found</h1>
     <p>Sorry, the page you are looking for could not be found.</p>
-    <p><a href="index.php">Move to main page</a></p>
-</body>
-</html>
+</div>
+<div class="my-container text-center">
+    <a href="index.php" class="btn btn-primary">Move to main page</a>
+</div>

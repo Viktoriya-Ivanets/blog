@@ -89,40 +89,43 @@ function setDefaultAvatar(int $id)
 	return true;
 }
 
-function validateAvatar(array $file){
+function validateAvatar(array $file)
+{
 	$errors = [];
 	if ($file['name'] === '') {
-        $errors[] = 'Choose file!';
-    }
+		$errors[] = 'Choose file!';
+	}
 	if ($file['size'] === 0 && $file['name'] !== '') {
 		$errors[] = 'File too large!';
-    }
+	}
 	if (!checkImageName($file['name']) && $file['name'] !== '') {
-        $errors[] = 'Only jpg';
+		$errors[] = 'Only jpg';
 	}
 	return $errors;
 }
 
-function checkNickname(string $nickname){
+function checkNickname(string $nickname)
+{
 	$sql = "SELECT nickname FROM users WHERE nickname=:nickname";
 	$query = dbQuery($sql, ['nickname' => $nickname]);
 	$user = $query->fetch();
 	return $user === false ? null : $user;
 }
-function validateRegistration(array $fields){
+function validateRegistration(array $fields)
+{
 	$errors = [];
 	$checkLogin = usersOne($fields['login']);
 	$checkNick = checkNickname($fields['nickname']);
 	if ($fields['login'] === '' || $fields['password'] === '' || $fields['nickname'] === '') {
 		$errors[] = 'Fill required fields at least';
 	}
-	if($checkNick != null ){
+	if ($checkNick != null) {
 		$errors[] = 'Such nick already exist';
 	}
-	if($checkLogin != null ){
+	if ($checkLogin != null) {
 		$errors[] = 'Such login already exist';
 	}
-	if(mb_strlen($fields['password']) < 6){
+	if (mb_strlen($fields['password']) < 6) {
 		$errors[] = 'Password must be at least 6 chars';
 	}
 	return $errors;

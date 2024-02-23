@@ -5,13 +5,12 @@ $id = isset($_GET['id']) ? $_GET['id'] : null;
 if (is_numeric($id)) {
     $user = usersById($id);
     if (is_null($user)) {
-        header('HTTP/1.1 404 Not Found');
-        include 'views/error/e404.php';
+        make404Error($authInfo);
         exit;
     }
 } else {
     header('HTTP/1.1 400 Bad Request');
-    include 'views/error/e400.php';
+    make400Error($authInfo);
     exit;
 }
 $articles = getArticlesByUser($id);
@@ -43,10 +42,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$pageContent = template('user_page', ['user' => $user, 'authInfo' => $authInfo, 'articles'=> $articles, 'err' => $err]);
+$pageContent = template('user_page', ['user' => $user, 'authInfo' => $authInfo, 'articles' => $articles, 'err' => $err]);
 $html = template('main', [
-	'title' => $pageTitle,
-	'content' => $pageContent, 
+    'title' => $pageTitle,
+    'content' => $pageContent,
     'authInfo' => $authInfo
 ]);
 

@@ -5,8 +5,8 @@ $id = isset($_GET['id']) ? $_GET['id'] : null;
 
 if ($authInfo == null) {
     $_SESSION['system_message'] = 'Log-In or Sign-Up to add your comment';
-	header("Location: article.php?id=" . $id);
-	exit();
+    header("Location: article.php?id=" . $id);
+    exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

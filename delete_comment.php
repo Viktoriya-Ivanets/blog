@@ -7,19 +7,19 @@ if (is_numeric($id)) {
     $commentInfo = getCommentInfo($id);
     if (is_null($commentInfo)) {
         header('HTTP/1.1 404 Not Found');
-        include 'views/error/e404.php';
+        make404Error($authInfo);
         exit;
     }
 } else {
     header('HTTP/1.1 400 Bad Request');
-    include 'views/error/e400.php';
+    make400Error($authInfo);
     exit;
 }
 $message = '';
 if ($authInfo == null) {
     $_SESSION['system_message'] = 'You are not permitted for such actions';
-	header("Location: article.php?id=" . $commentInfo['article_id']);
-	exit();
+    header("Location: article.php?id=" . $commentInfo['article_id']);
+    exit();
 }
 
 if ($authInfo['role'] === 'admin' && $authInfo['id'] !== $commentInfo['id_user']) {
@@ -28,12 +28,12 @@ if ($authInfo['role'] === 'admin' && $authInfo['id'] !== $commentInfo['id_user']
     addNotification($commentInfo['id_user'], $commentInfo['article_id'], $notification, $commentInfo['content']);
     deleteComment($id);
     $_SESSION['system_message'] = 'Comment deleted. Notification sent to user';
-        header("Location: article.php?id=" . $commentInfo['article_id']);
-        exit();
-} 
-if($authInfo['id'] === $commentInfo['id_user']) {
+    header("Location: article.php?id=" . $commentInfo['article_id']);
+    exit();
+}
+if ($authInfo['id'] === $commentInfo['id_user']) {
     deleteComment($id);
     $_SESSION['system_message'] = 'Comment deleted successfully';
-        header("Location: article.php?id=" . $commentInfo['article_id']);
-        exit();
+    header("Location: article.php?id=" . $commentInfo['article_id']);
+    exit();
 }

@@ -30,5 +30,5 @@ function getCommentInfo(int $id)
 {
     $sql = "SELECT content, article_id, id_user FROM comments WHERE comment_id = :id";
     $query = dbQuery($sql, ['id' => $id]);
-	return $query->fetch() ?: null;
+    return $query->fetch() ?: null;
 }

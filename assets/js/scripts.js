@@ -4,9 +4,10 @@ function addSystemMessage(systemMessage) {
     var messageContainer = document.createElement('div');
     messageContainer.classList.add('system_message');
     messageContainer.innerHTML = systemMessage;
-    document.body.insertBefore(messageContainer, document.querySelector('main'));
+    var mainElement = document.querySelector('main');
+    mainElement.parentNode.insertBefore(messageContainer, mainElement);
 
-    setTimeout(function() {
+    setTimeout(function () {
         messageContainer.parentNode.removeChild(messageContainer);
     }, 5000);
 }

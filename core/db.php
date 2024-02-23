@@ -36,3 +36,4 @@ function dbCheckError(PDOStatement $query): bool
 	return true;
 }
 ?>
+

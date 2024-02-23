@@ -21,15 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $pageContent = template('search', [
-    'message'=> $message,
+    'message' => $message,
     'articleResults' => $articleResults,
     'categoryResults' => $categoryResults,
-    'tagsResults'=> $tagsResults,
+    'tagsResults' => $tagsResults,
 ]);
 
 $html = template('main', [
-	'title' => $pageTitle,
-	'content' => $pageContent, 
+    'title' => $pageTitle,
+    'content' => $pageContent,
     'authInfo' => $authInfo
 ]);
 
